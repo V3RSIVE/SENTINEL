@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTINEL - Honeywell Supply Chain Risk Advisor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <img src="images/sentinel-logo.svg" alt="SENTINEL Logo" class="sentinel-logo">
+                <div class="logo-text">
+                    <h1>SENTINEL</h1>
+                    <h2>Supply Chain Risk Advisor</h2>
+                    <p>By Honeywell</p>
+                </div>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-status">
+                <p>Initializing system components...</p>
+                <p>Loading supply chain data...</p>
+                <p>Analyzing risk patterns...</p>
+                <p>Establishing secure connections...</p>
+                <p>SENTINEL is ready.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <img src="images/sentinel-logo.svg" alt="SENTINEL Logo">
+                <h1>SENTINEL</h1>
+            </div>
+            <div class="header-controls">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search suppliers, components, or risks...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-controls">
+                    <div class="date-time">April 18, 2025 20:43 EDT</div>
+                    <div class="user"><i class="fas fa-user-circle"></i> Admin</div>
+                    <button class="notifications"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    <button class="settings"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul>
+                    <li data-tab="dashboard" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></li>
+                    <li data-tab="emergency-events"><i class="fas fa-exclamation-triangle"></i> <span>Emergency Events</span></li>
+                    <li data-tab="suppliers"><i class="fas fa-industry"></i> <span>Suppliers</span></li>
+                    <li data-tab="settings"><i class="fas fa-cog"></i> <span>Settings</span></li>
+                </ul>
+                <div class="sidebar-footer">
+                    <div class="risk-level">
+                        <span>Current Supply Chain Risk Level:</span>
+                        <div class="risk-indicator medium">Medium</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="dashboard-header">
+                        <h2>Supply Chain Overview</h2>
+                        <div class="controls">
+                            <select>
+                                <option>Last 24 Hours</option>
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>Custom Range</option>
+                            </select>
+                            <button><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button><i class="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="globe-container">
+                            <div id="globe-visualization"></div>
+                            <div class="globe-controls">
+                                <button id="zoom-in"><i class="fas fa-plus"></i></button>
+                                <button id="zoom-out"><i class="fas fa-minus"></i></button>
+                                <button id="reset-view"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                            <div class="legend">
+                                <div class="legend-item">
+                                    <div class="dot normal"></div>
+                                    <span>Normal</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="dot warning"></div>
+                                    <span>Warning</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="dot critical"></div>
+                                    <span>Critical</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="dot inactive"></div>
+                                    <span>Inactive</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metrics-container">
+                            <div class="metric-card">
+                                <h3>Active Suppliers</h3>
+                                <div class="metric-value">1,200+</div>
+                                <div class="metric-change positive">+3 from last week</div>
+                            </div>
+                            <div class="metric-card">
+                                <h3>Supply Chain Disruptions</h3>
+                                <div class="metric-value">7</div>
+                                <div class="metric-change negative">+2 from last week</div>
+                            </div>
+                            <div class="metric-card">
+                                <h3>Average Lead Time</h3>
+                                <div class="metric-value">18.5 days</div>
+                                <div class="metric-change positive">-2.3 days from last month</div>
+                            </div>
+                            <div class="metric-card">
+                                <h3>On-Time Delivery Rate</h3>
+                                <div class="metric-value">94.2%</div>
+                                <div class="metric-change positive">+1.5% from last month</div>
+                            </div>
+                        </div>
+                        <div class="alerts-container">
+                            <h3>Active Alerts <span class="alert-count">3</span></h3>
+                            <div class="alert-list">
+                                <div class="alert critical">
+                                    <div class="alert-icon"><i class="fas fa-exclamation-circle"></i></div>
+                                    <div class="alert-content">
+                                        <h4>Critical: Supplier Shutdown</h4>
+                                        <p>Precision Components Ltd. (Shanghai) has reported complete shutdown due to power outage.</p>
+                                        <div class="alert-time">2 hours ago</div>
+                                    </div>
+                                    <div class="alert-actions">
+                                        <button class="simulate-response">Respond</button>
+                                    </div>
+                                </div>
+                                <div class="alert warning">
+                                    <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                    <div class="alert-content">
+                                        <h4>Warning: Shipping Delay</h4>
+                                        <p>TechSys Inc. shipments delayed by 3-5 days due to port congestion.</p>
+                                        <div class="alert-time">5 hours ago</div>
+                                    </div>
+                                    <div class="alert-actions">
+                                        <button>View Details</button>
+                                    </div>
+                                </div>
+                                <div class="alert info">
+                                    <div class="alert-icon"><i class="fas fa-info-circle"></i></div>
+                                    <div class="alert-content">
+                                        <h4>Weather Advisory</h4>
+                                        <p>Potential typhoon forming near Southeast Asian shipping routes.</p>
+                                        <div class="alert-time">12 hours ago</div>
+                                    </div>
+                                    <div class="alert-actions">
+                                        <button>View Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="forecast-container">
+                            <h3>Risk Forecast (Next 7 Days)</h3>
+                            <div class="forecast-chart">
+                                <canvas id="risk-forecast-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Events Tab -->
+                <div id="emergency-events" class="tab-content">
+                    <div class="emergency-header">
+                        <h2>Emergency Events Management</h2>
+                        <div class="controls">
+                            <button id="manage-disruption"><i class="fas fa-bolt"></i> Manage Disruption</button>
+                        </div>
+                    </div>
+                    <div class="emergency-grid">
+                        <div class="emergency-events">
+                            <h3>Active Emergency Events</h3>
+                            <div class="event-list">
+                                <div class="event critical">
+                                    <div class="event-header">
+                                        <h4>Supplier Shutdown: Precision Components Ltd.</h4>
+                                        <div class="event-status">Critical</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-info">
+                                            <p><strong>Location:</strong> Shanghai, China</p>
+                                            <p><strong>Impact:</strong> Complete production stoppage affecting 15% of electronic component supply</p>
+                                            <p><strong>Duration:</strong> Estimated 48-72 hours</p>
+                                            <p><strong>Cause:</strong> Regional power outage due to infrastructure failure</p>
+                                            <p><strong>Last Update:</strong> April 18, 2025 18:45 EDT</p>
+                                        </div>
+                                        <div class="event-actions">
+                                            <button class="primary-action">Manage Disruption</button>
+                                            <button>View Details</button>
+                                            <button>Contact Supplier</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event warning">
+                                    <div class="event-header">
+                                        <h4>Shipping Delay: TechSys Inc.</h4>
+                                        <div class="event-status">Warning</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-info">
+                                            <p><strong>Location:</strong> Port of Oakland, California</p>
+                                            <p><strong>Impact:</strong> 3-5 day delay for semiconductor components</p>
+                                            <p><strong>Duration:</strong> Expected to resolve within 1 week</p>
+                                            <p><strong>Cause:</strong> Port congestion due to labor shortage</p>
+                                            <p><strong>Last Update:</strong> April 18, 2025 15:20 EDT</p>
+                                        </div>
+                                        <div class="event-actions">
+                                            <button class="primary-action">Assess Impact</button>
+                                            <button>View Details</button>
+                                            <button>Contact Logistics</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="potential-events">
+                            <h3>Potential Disruptions</h3>
+                            <div class="event-list">
+                                <div class="event info">
+                                    <div class="event-header">
+                                        <h4>Weather Advisory: Southeast Asia</h4>
+                                        <div class="event-status">Monitoring</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-info">
+                                            <p><strong>Location:</strong> South China Sea shipping routes</p>
+                                            <p><strong>Potential Impact:</strong> Shipping delays of 2-7 days</p>
+                                            <p><strong>Probability:</strong> 65%</p>
+                                            <p><strong>Timeline:</strong> Developing over next 48 hours</p>
+                                            <p><strong>Last Update:</strong> April 18, 2025 08:15 EDT</p>
+                                        </div>
+                                        <div class="event-actions">
+                                            <button class="primary-action">Prepare Contingency</button>
+                                            <button>View Forecast</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event info">
+                                    <div class="event-header">
+                                        <h4>Political Unrest: Eastern Europe</h4>
+                                        <div class="event-status">Monitoring</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-info">
+                                            <p><strong>Location:</strong> Multiple countries in Eastern Europe</p>
+                                            <p><strong>Potential Impact:</strong> Border delays, increased security checks</p>
+                                            <p><strong>Probability:</strong> 40%</p>
+                                            <p><strong>Timeline:</strong> Developing over next 2 weeks</p>
+                                            <p><strong>Last Update:</strong> April 17, 2025 14:30 EDT</p>
+                                        </div>
+                                        <div class="event-actions">
+                                            <button class="primary-action">Risk Assessment</button>
+                                            <button>View Intelligence</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulation-container">
+                            <h3>Disruption Simulation</h3>
+                            <div class="simulation-controls">
+                                <button>Run Simulation</button>
+                                <button>View Past Simulations</button>
+                            </div>
+                            <div class="simulation-scenarios">
+                                <h4>Predefined Scenarios</h4>
+                                <ul>
+                                    <li><a href="#">Major Supplier Shutdown (30+ days)</a></li>
+                                    <li><a href="#">Global Shipping Crisis</a></li>
+                                    <li><a href="#">Regional Natural Disaster</a></li>
+                                    <li><a href="#">Cyber Attack on Key Suppliers</a></li>
+                                    <li><a href="#">Multiple Concurrent Disruptions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suppliers Tab -->
+                <div id="suppliers" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2>Honeywell Subsidiaries</h2>
+                        <div class="controls">
+                            <select>
+                                <option>All Subsidiaries</option>
+                                <option>By Region</option>
+                                <option>By Type</option>
+                            </select>
+                            <button><i class="fas fa-filter"></i> Filter</button>
+                            <button><i class="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="subsidiaries-list">
+                        <div class="list-container">
+                            <table class="subsidiaries-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subsidiary Name</th>
+                                        <th>Location/Region</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>"Honeywell Automation Controls System" limited liability partnership</td>
+                                        <td>Global</td>
+                                        <td>Automation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1077900 ALBERTA LTD.</td>
+                                        <td>Alberta, Canada</td>
+                                        <td>Corporate Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1135198 ALBERTA LTD.</td>
+                                        <td>Alberta, Canada</td>
+                                        <td>Corporate Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>801 Route 440 Funding Co., LLC</td>
+                                        <td>United States</td>
+                                        <td>Finance</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A.R.G.- AFCON R.M.G. Gas Technologies Ltd.</td>
+                                        <td>Middle East</td>
+                                        <td>Gas Technologies</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABI Acquisition 1 Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Acquisition Vehicle</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABI Acquisition 2 Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Acquisition Vehicle</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABI Corporation</td>
+                                        <td>United States</td>
+                                        <td>Corporate Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ademco Asia Pacific Limited</td>
+                                        <td>Asia Pacific</td>
+                                        <td>Security Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ademco de Juarez, S. de R.L. de C.V.</td>
+                                        <td>Mexico</td>
+                                        <td>Security Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ademco II LLC</td>
+                                        <td>United States</td>
+                                        <td>Security Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Advanced Integrated Recorders, Inc.</td>
+                                        <td>United States</td>
+                                        <td>Recording Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Advanced Turbine Engine Company LLC</td>
+                                        <td>United States</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alchem Assurance Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Insurance</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Allied Chemical Nuclear Products, Inc.</td>
+                                        <td>United States</td>
+                                        <td>Chemical</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service Corporation - French Branch</td>
+                                        <td>France</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service Corporation - German PE</td>
+                                        <td>Germany</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service Corporation - Philippines Branch</td>
+                                        <td>Philippines</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service Corporation - Russian Representative Office</td>
+                                        <td>Russia</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service Corporation - UK Branch</td>
+                                        <td>United Kingdom</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Aerospace Service LLC</td>
+                                        <td>United States</td>
+                                        <td>Aerospace</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AlliedSignal Foreign Sales Corporation</td>
+                                        <td>Global</td>
+                                        <td>Sales</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AMHERSTBURG LAND HOLDINGS LIMITED</td>
+                                        <td>Canada</td>
+                                        <td>Real Estate</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ANIMAC sarl</td>
+                                        <td>France</td>
+                                        <td>Manufacturing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AO Honeywell</td>
+                                        <td>Russia</td>
+                                        <td>Regional Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AO Honeywell - Minsk Representative Office</td>
+                                        <td>Belarus</td>
+                                        <td>Representative Office</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Arkon Safety U.K. Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Asahi-Schwebel (Taiwan) Co., Ltd.</td>
+                                        <td>Taiwan</td>
+                                        <td>Manufacturing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Atlas Gas Pty Ltd</td>
+                                        <td>Australia</td>
+                                        <td>Gas Technologies</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Authentication Technologies LLC</td>
+                                        <td>United States</td>
+                                        <td>Security</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Automation and Control Solutions Holding Mexico, S. de R.L. de C.V.</td>
+                                        <td>Mexico</td>
+                                        <td>Automation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AUTOMATION AND CONTROL SOLUTIONS LIMITED</td>
+                                        <td>United Kingdom</td>
+                                        <td>Automation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>B W Europe Limited</td>
+                                        <td>Europe</td>
+                                        <td>Regional Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bacou-Dalloz Safety, LLC</td>
+                                        <td>United States</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Baker Electronics, Inc.</td>
+                                        <td>United States</td>
+                                        <td>Electronics</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bayfront Redevelopment LLC</td>
+                                        <td>United States</td>
+                                        <td>Real Estate</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bemkromgaz LLC</td>
+                                        <td>Eastern Europe</td>
+                                        <td>Gas Technologies</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Berkat Honeywell SDN.BHD.</td>
+                                        <td>Malaysia</td>
+                                        <td>Regional Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>BW RESEARCH</td>
+                                        <td>United States</td>
+                                        <td>Research</td>
+                                    </tr>
+                                    <tr>
+                                        <td>BW Technologies Partnership</td>
+                                        <td>Canada</td>
+                                        <td>Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>BWXT Pantex, LLC</td>
+                                        <td>United States</td>
+                                        <td>Defense</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Callidus Combustion Technologies and Equipment (Shanghai) Co. Ltd.</td>
+                                        <td>China</td>
+                                        <td>Combustion Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Callidus Holdings, LLC</td>
+                                        <td>United States</td>
+                                        <td>Holding Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Callidus Technologies International, L.L.C.</td>
+                                        <td>Global</td>
+                                        <td>Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Callidus Technologies, L.L.C.</td>
+                                        <td>United States</td>
+                                        <td>Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum Computing Japan</td>
+                                        <td>Japan</td>
+                                        <td>Quantum Computing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum Computing Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Quantum Computing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum Computing, LLC</td>
+                                        <td>United States</td>
+                                        <td>Quantum Computing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum Deutschland GmbH</td>
+                                        <td>Germany</td>
+                                        <td>Quantum Computing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum Keys Ltd</td>
+                                        <td>United Kingdom</td>
+                                        <td>Quantum Security</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cambridge Quantum North America Holdings, LLC</td>
+                                        <td>United States</td>
+                                        <td>Holding Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carduin Desarrollos SL</td>
+                                        <td>Spain</td>
+                                        <td>Development</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CEC Combustion Safety LLC</td>
+                                        <td>United States</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cedar Court Indemnity Company</td>
+                                        <td>United States</td>
+                                        <td>Insurance</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CFE Company</td>
+                                        <td>United States</td>
+                                        <td>Corporate Entity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cincinnati Machine of UNOVA, Inc.</td>
+                                        <td>United States</td>
+                                        <td>Manufacturing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>City Technology Holdings Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Holding Company</td>
+                                    </tr>
+                                    <tr>
+                                        <td>City Technology Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>COM DEV Europe Limited</td>
+                                        <td>Europe</td>
+                                        <td>Communications</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combisafe Deutschland GmbH</td>
+                                        <td>Germany</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>COMBISAFE France SAS</td>
+                                        <td>France</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combisafe International Aktiebolag</td>
+                                        <td>Sweden</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>COMBISAFE INTERNATIONAL LIMITED</td>
+                                        <td>United Kingdom</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combisafe Nederland B.V.</td>
+                                        <td>Netherlands</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>COMBISAFE NORGE AS</td>
+                                        <td>Norway</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>COMBISAFE SUOMI OY</td>
+                                        <td>Finland</td>
+                                        <td>Safety Systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Compressor Controls LLC</td>
+                                        <td>United States</td>
+                                        <td>Controls</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comstack Limited</td>
+                                        <td>United Kingdom</td>
+                                        <td>Communications</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ConverDyn</td>
+                                        <td>United States</td>
+                                        <td>Energy</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Datamax-O'Neil Corporation</td>
+                                        <td>United States</td>
+                                        <td>Printing Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Eclipse Combustion (Thailand) Limited</td>
+                                        <td>Thailand</td>
+                                        <td>Combustion Technology</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Eclipse Combustion Equipment (Suzhou) Co. Ltd.</td>
+                                        <td>China</td>
+                                        <td>Combustion Technology</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-content">
+                    <h2>System Settings</h2>
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>User Preferences</h3>
+                            <div class="setting-item">
+                                <label>Language</label>
+                                <select>
+                                    <option selected>English</option>
+                                    <option>Spanish</option>
+                                    <option>French</option>
+                                    <option>German</option>
+                                    <option>Chinese</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Time Zone</label>
+                                <select>
+                                    <option selected>Eastern Time (EDT)</option>
+                                    <option>Central Time (CDT)</option>
+                                    <option>Mountain Time (MDT)</option>
+                                    <option>Pacific Time (PDT)</option>
+                                    <option>UTC</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Date Format</label>
+                                <select>
+                                    <option selected>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Theme</label>
+                                <select>
+                                    <option selected>Honeywell (Default)</option>
+                                    <option>Dark</option>
+                                    <option>Light</option>
+                                    <option>High Contrast</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>Notifications</h3>
+                            <div class="setting-item checkbox">
+                                <input type="checkbox" id="email-notifications" checked>
+                                <label for="email-notifications">Email Notifications</label>
+                            </div>
+                            <div class="setting-item checkbox">
+                                <input type="checkbox" id="sms-notifications">
+                                <label for="sms-notifications">SMS Notifications</label>
+                            </div>
+                            <div class="setting-item checkbox">
+                                <input type="checkbox" id="push-notifications" checked>
+                                <label for="push-notifications">Push Notifications</label>
+                            </div>
+                            <div class="setting-item">
+                                <label>Notification Frequency</label>
+                                <select>
+                                    <option>Real-time</option>
+                                    <option selected>Hourly Digest</option>
+                                    <option>Daily Digest</option>
+                                    <option>Critical Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>System</h3>
+                            <div class="setting-item">
+                                <label>Data Refresh Rate</label>
+                                <select>
+                                    <option>30 seconds</option>
+                                    <option selected>1 minute</option>
+                                    <option>5 minutes</option>
+                                    <option>15 minutes</option>
+                                    <option>30 minutes</option>
+                                </select>
+                            </div>
+                            <div class="setting-item checkbox">
+                                <input type="checkbox" id="auto-logout" checked>
+                                <label for="auto-logout">Auto Logout (after 30 minutes of inactivity)</label>
+                            </div>
+                            <div class="setting-item">
+                                <label>Default Dashboard View</label>
+                                <select>
+                                    <option selected>Global Overview</option>
+                                    <option>Risk Analysis</option>
+                                    <option>Supplier Status</option>
+                                    <option>Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="settings-actions">
+                            <button class="secondary-action">Reset to Defaults</button>
+                            <button class="primary-action">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Disruption Management Modal -->
+    <div id="disruption-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Disruption Management: Precision Components Ltd.</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="supplier-info">
+                    <div class="supplier-details">
+                        <h3>Supplier Information</h3>
+                        <p><strong>Name:</strong> Precision Components Ltd.</p>
+                        <p><strong>Location:</strong> Shanghai, China</p>
+                        <p><strong>Status:</strong> <span class="critical">Critical - Complete Shutdown</span></p>
+                        <p><strong>Products:</strong> Electronic components, circuit boards, sensors</p>
+                        <p><strong>Annual Volume:</strong> $42.5M</p>
+                        <p><strong>Criticality Rating:</strong> High (Tier 1 Supplier)</p>
+                        <p><strong>Redundancy:</strong> Partial (65% coverage)</p>
+                    </div>
+                    <div class="impact-assessment">
+                        <h3>Impact Assessment</h3>
+                        <p><strong>Affected Products:</strong> 12 product lines</p>
+                        <p><strong>Production Impact:</strong> 15% reduction in electronic component availability</p>
+                        <p><strong>Inventory Buffer:</strong> 18 days at current consumption rate</p>
+                        <p><strong>Financial Impact:</strong> $2.1M per week of disruption</p>
+                        <p><strong>Customer Impact:</strong> Potential delays for 3 major customers if exceeds 3 weeks</p>
+                        <p><strong>Estimated Recovery Time:</strong> 48-72 hours (supplier estimate)</p>
+                        <p><strong>Confidence Level:</strong> Medium (based on historical recovery patterns)</p>
+                    </div>
+                </div>
+                <div class="ai-recommendations">
+                    <h3>SENTINEL AI Recommendations</h3>
+                    <div class="recommendation primary">
+                        <h4><i class="fas fa-robot"></i> Primary Recommendation: Load Redistribution</h4>
+                        <p>Redistribute production load to alternative suppliers with available capacity. Analysis indicates this is the most efficient solution with minimal disruption to overall supply chain.</p>
+                        <ul>
+                            <li>ElectroParts GmbH (Munich) can absorb 35% of production</li>
+                            <li>MicroTech Industries (Penang) can absorb 25% of production</li>
+                            <li>Advanced Components Inc. (Monterrey) can absorb 25% of production</li>
+                            <li>Remaining 15% to be covered by inventory buffer</li>
+                        </ul>
+                        <p><strong>Estimated Implementation Time:</strong> 24 hours</p>
+                        <p><strong>Cost Implication:</strong> +12% premium on redistributed components</p>
+                        <button class="primary-action">Implement This Plan</button>
+                    </div>
+                    <div class="recommendation secondary">
+                        <h4><i class="fas fa-robot"></i> Alternative: Expedite Recovery Support</h4>
+                        <p>Deploy technical support team to assist Precision Components with recovery efforts. This may reduce downtime but has lower certainty.</p>
+                        <p><strong>Estimated Implementation Time:</strong> 12 hours to deploy team</p>
+                        <p><strong>Cost Implication:</strong> $150K for emergency support</p>
+                        <button>Consider This Option</button>
+                    </div>
+                    <div class="recommendation secondary">
+                        <h4><i class="fas fa-robot"></i> Alternative: Temporary Production Adjustment</h4>
+                        <p>Temporarily reduce production of lower-priority products to conserve components for critical product lines.</p>
+                        <p><strong>Estimated Implementation Time:</strong> 36 hours</p>
+                        <p><strong>Cost Implication:</strong> $1.8M in delayed revenue</p>
+                        <button>Consider This Option</button>
+                    </div>
+                </div>
+                <div class="redistribution-plan">
+                    <h3>Load Redistribution Visualization</h3>
+                    <div id="redistribution-visualization"></div>
+                    <div class="plan-details">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Alternative Supplier</th>
+                                    <th>Location</th>
+                                    <th>Current Capacity</th>
+                                    <th>Allocated Load</th>
+                                    <th>New Utilization</th>
+                                    <th>Lead Time Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ElectroParts GmbH</td>
+                                    <td>Munich, Germany</td>
+                                    <td>65%</td>
+                                    <td>35%</td>
+                                    <td>87%</td>
+                                    <td>+2 days</td>
+                                </tr>
+                                <tr>
+                                    <td>MicroTech Industries</td>
+                                    <td>Penang, Malaysia</td>
+                                    <td>70%</td>
+                                    <td>25%</td>
+                                    <td>88%</td>
+                                    <td>+3 days</td>
+                                </tr>
+                                <tr>
+                                    <td>Advanced Components Inc.</td>
+                                    <td>Monterrey, Mexico</td>
+                                    <td>60%</td>
+                                    <td>25%</td>
+                                    <td>78%</td>
+                                    <td>+1 day</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button>Cancel</button>
+                    <button id="implement-redistribution" class="primary-action">Implement Redistribution Plan</button>
+                    <button id="confirm-plan">Confirm Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
